@@ -1,0 +1,51 @@
+header {
+  // position: relative;
+
+  .main-nav {
+    background-color: var(--head-bg);
+    padding: 0.405rem 0 1.55rem;
+
+    .plus--icon {
+      font-size: 15px;
+      position: relative;
+      top: -4px;
+    }
+
+    .container-fluid {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      color: var(--light);
+      font-weight: 600;
+      font-size: 2rem;
+      display: flex;
+      align-items: end;
+      width: fit-content;
+      margin-bottom: 0;
+      margin: auto;
+      position: relative;
+
+      .sub-title {
+        font-size: 1rem;
+        font-weight: 300;
+        position: absolute;
+        bottom: -0.75rem;
+        right: 0;
+      }
+
+      transition: margin 600ms ease-in-out;
+
+      @media screen and (min-width: 60rem) {
+        margin: 0;
+      }
+
+      img {
+        max-height: 3.125rem;
+        padding-right: 0.625rem;
+      }
+    }
+  }
+}

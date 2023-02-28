@@ -1,0 +1,41 @@
+.loader {
+  width: 3rem;
+  height: 3rem;
+  background: var(--linear-bg);
+  border-radius: 50%;
+  margin-left: -1.5rem;
+  margin-top: -3rem;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  &::after {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--playing);
+  }
+
+  &.small {
+    width: 1rem;
+    height: 1rem;
+    left: 0;
+    top: 0;
+    position: relative;
+
+    &::after {
+      width: 0.75rem;
+      height: 0.75rem;
+    }
+  }
+}

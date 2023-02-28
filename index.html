@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>madTunes</title>
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    img-src 'self';
+    script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline' *.googleapis.com *.typekit.net;
+    font-src *.typekit.net *.gstatic.com" />
+
+    <script src="./js/utils.js"></script>
+    <script src="./js/app.js" type="module"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet" href="https://use.typekit.net/iuc6wkw.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,600,0,0" />
+
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="shortcut icon" href="./favicon/favicon.ico">
+
+</head>
+
+<body>
+    <header>
+
+        <div class="main-nav">
+            <div class="container-fluid">
+                <div class="left-nav">
+                    <button id="btnNavBack" disabled title="Go Back">
+                        <span class="material-symbols-rounded">
+                            arrow_back
+                        </span>
+                    </button>
+                </div>
+                <h1 class="logo">Giftr<span class="sub-title">App</span></h1>
+                <div class="right-nav">
+                    <button id="btnNavAddUsr" title="Go Back">
+                        <span class="material-symbols-rounded">
+                            <span class="plus--icon">add</span>person
+                    </button>
+                    </span>
+                    <button id="btnNavAddGft" disabled title="Go Back">
+                        <span class="material-symbols-rounded">
+                            <span class="plus--icon">add</span>redeem
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <!-- Home -->
+            <section id="page-home" active>
+                <ul class="person-list">
+                    <!-- Person Item -->
+                    <li class="person-item">
+                        <h2 class="person-item__name">Person Name</h2>
+                        <p class="person-item__dob">Month Day</p>
+                        <button class="person-item__edit-button">
+                            <span class="material-symbols-rounded">edit</span>
+                        </button>
+                        <button class="person-item__gift-button">
+                            <span class="material-symbols-rounded">card_giftcard</span>
+                        </button>
+                    </li>
+                </ul>
+            </section>
+            <!-- Add/Edit Person -->
+            <section id="page-add-edit-person" hidden>
+                <form class="person-form">
+                    <div class="person-form__field">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required />
+                    </div>
+                    <div class="person-form__field">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" name="dob" required />
+                    </div>
+                    <button type="submit" class="person-form__submit-button">
+                        Save
+                    </button>
+                    <button type="button" class="person-form__delete-button">
+                        Delete
+                    </button>
+                </form>
+            </section>
+            <!-- Gift List -->
+            <section id="page-gift-list" hidden>
+                <h2 class="gift-list-screen__person-name">Person Name</h2>
+                <ul class="gift-list">
+                    <!-- Gift Item -->
+                    <li class="gift-item">
+                        <p class="gift-item__text">Gift Idea</p>
+                        <p class="gift-item__store">Store</p>
+
+                        <p class="gift-item__url">URL</p>
+                        <button class="gift-item__delete-button">
+                            <i class="material-icons">delete</i>
+                        </button>
+                    </li>
+                </ul>
+            </section>
+            <!-- Add Gift -->
+            <section id="page-add-gift" hidden>
+                <form class="gift-form">
+                    <div class="gift-form__field">
+                        <label for="text">Gift Idea</label>
+                        <input type="text" id="text" name="text" required />
+                    </div>
+                    <div class="gift-form__field">
+                        <label for="store">Store</label>
+                        <input type="text" id="store" name="store" required />
+                    </div>
+                    <div class="gift-form__field">
+                        <label for="url">URL</label>
+                        <input type="text" id="url" name="url" required />
+                    </div>
+                    <button type="submit" class="gift-form__submit-button">
+                        Save
+                    </button>
+                </form>
+            </section>
+        </div>
+    </main>
+</body>
+
+
+</html>

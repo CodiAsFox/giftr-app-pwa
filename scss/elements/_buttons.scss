@@ -1,0 +1,41 @@
+.buttons {
+  margin-left: 20px;
+}
+button {
+  background-color: var(--dark);
+
+  padding: 5px 10px;
+  margin: 0 10px;
+  display: inline-flex;
+
+  background: var(--dark);
+
+  &[disabled] {
+    display: none;
+  }
+
+  .material-symbols-rounded {
+    margin-right: 5px;
+  }
+
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  transition: box-shadow 300ms ease, border 400ms ease;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background-color: transparentize($color: #7b4b91, $amount: 0.71);
+    border: 2px solid var(--accent);
+    box-shadow: 0px 0px 20px var(--accent);
+  }
+}
+
+#btnItem {
+  border-color: rgba(81, 231, 255, 0.51);
+  &:hover,
+  &:focus-visible {
+    background-color: rgba(81, 231, 255, 0.15);
+    box-shadow: 0px 0px 20px rgba(81, 231, 255, 0.51);
+  }
+}

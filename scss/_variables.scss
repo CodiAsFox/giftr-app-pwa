@@ -1,0 +1,68 @@
+$white: #fff;
+$light: #f6f6f6;
+$black: #000;
+$dark: #333;
+$body-bg: #2d2d2d;
+$head-bg: #1f0f24;
+$separator: #443c3c;
+$player: #3d3d3d;
+$accent: #7b4b91;
+$text: #f6f6f6;
+$playing: #1e1e1e;
+$progress: rgb(233, 233, 233);
+$colour-primary: rgb(147, 15, 224);
+$colour-primary-dark: rgb(95, 11, 143);
+
+$primary-colour: #5f86f2;
+$secondary-colour: #a65ff2;
+$third-colour: #f25fd0;
+$forth-colour: #5ff2f0;
+
+$error: #9f2e2e;
+$warning: #a49f57;
+
+$linear-bg: linear-gradient(
+  60deg,
+  transparentize($primary-colour, 0.245),
+  transparentize($secondary-colour, 0.245),
+  transparentize($third-colour, 0.245),
+  transparentize($forth-colour, 0.245)
+);
+
+$linear-bg-alt: linear-gradient(
+  60deg,
+  transparentize($primary-colour, 0.245),
+  transparentize($secondary-colour, 0.245),
+  transparentize($third-colour, 0.245),
+  transparentize($forth-colour, 0.245),
+  transparentize(#5f95f2, 0.245),
+  transparentize(#5ff26d, 0.245)
+);
+
+$colours: (
+  "white": $white,
+  "light": $light,
+  "black": $black,
+  "dark": $dark,
+  "body-bg": $body-bg,
+  "head-bg": $head-bg,
+  "player": $player,
+  "separator": $separator,
+  "primary-colour": $primary-colour,
+  "secondary-colour": $secondary-colour,
+  "third-colour": $third-colour,
+  "forth-colour": $forth-colour,
+  "text": $text,
+  "playing": $playing,
+  "progress": $linear-bg,
+  "colour-primary": $colour-primary,
+  "colour-primary-dark": $colour-primary-dark,
+  "linear-bg": $linear-bg,
+  "linear-bg-alt": $linear-bg-alt,
+);
+
+:root {
+  @each $key, $colour in $colours {
+    --#{$key}: #{$colour};
+  }
+}

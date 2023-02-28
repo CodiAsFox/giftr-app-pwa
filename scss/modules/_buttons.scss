@@ -1,0 +1,27 @@
+.btn {
+  color: var(--light);
+  background: none;
+  padding: 0.9375rem;
+  border: 0.0625rem solid var(--light);
+  border-radius: 50%;
+  line-height: 1;
+  height: fit-content;
+  width: fit-content;
+  cursor: pointer;
+  transition: background 300ms ease-in-out;
+
+  &[disabled] {
+    display: none;
+  }
+
+  &:hover,
+  &:focus-visible {
+    background-color: transparentize($accent, 0.55);
+  }
+
+  &-shuffle {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    z-index: 1;
+  }
+}

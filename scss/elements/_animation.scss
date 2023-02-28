@@ -1,0 +1,66 @@
+.gradient--border {
+  $border: 0.32rem;
+
+  position: relative;
+  border-radius: $border;
+
+  &::after {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    top: calc(-1 * $border);
+    left: calc(-1 * $border);
+    width: calc(100% + $border * 2);
+    height: calc(100% + $border * 2);
+    background: var(--linear-bg);
+    background-size: 300% 300%;
+    background-position: 0 50%;
+    border-radius: calc(2 * $border);
+    animation: border-gradient 6s alternate infinite;
+  }
+}
+
+@keyframes border-gradient {
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes bg-scrolling {
+  0% {
+    background-position: 150rem 107rem;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -100%;
+  }
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes expand {
+  0% {
+    flex: 0;
+  }
+  100% {
+    flex: 65%;
+    @media screen and (min-width: 60rem) {
+      flex: 50%;
+    }
+    @media screen and (min-width: 67rem) {
+      flex: 65%;
+    }
+  }
+}
