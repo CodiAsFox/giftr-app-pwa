@@ -8,14 +8,11 @@ const SeWo = {
     const header = document.querySelector(".offline--indicator");
     window.addEventListener("NetworkError", SeWo.handleError);
     window.addEventListener("error", SeWo.handleError);
-    // Display a CURRENTLY OFFLINE message in the header span if the page is loaded offline
     if (!SeWo.isOnline) {
       header.innerHTML = `<p>You are offline.`;
       header.classList.add("red");
       header.classList.remove("green");
     }
-
-    // Listen for the online and offline events and update the message in the header span
     window.addEventListener("online", () => {
       header.innerHTML = `<p>Back online.</p>`;
       header.classList.remove("red");

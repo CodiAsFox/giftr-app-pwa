@@ -31,17 +31,10 @@ const CACHE = {
     return cache;
   },
   get(file) {
-    // const cache = CACHE.cache.match(file);
-    // return cache;
-
-    return caches
-      .open(CACHE.cacheName)
-      .then((cache) => cache.match(file))
-      .then((response) => {
-        return response.text();
-      });
+    return CACHE.cache.match(file).then((response) => {
+      return response.text();
+    });
   },
-
   getAll() {
     const cache = CACHE.cache.keys().then((results) => {
       const msg =
@@ -54,7 +47,6 @@ const CACHE = {
 
     return cache;
   },
-
   save(fileName, fileData, fileType) {
     const file = new File([fileData], fileName, {
       type: fileType,

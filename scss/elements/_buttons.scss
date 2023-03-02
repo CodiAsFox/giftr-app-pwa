@@ -8,11 +8,11 @@ button {
   margin: 0 10px;
   display: inline-flex;
 
-  background: var(--dark);
-
   &[disabled] {
     display: none;
   }
+
+  background: var(--dark);
 
   .material-symbols-rounded {
     margin-right: 5px;
@@ -28,14 +28,5 @@ button {
     background-color: transparentize($color: #7b4b91, $amount: 0.71);
     border: 2px solid var(--accent);
     box-shadow: 0px 0px 20px var(--accent);
-  }
-}
-
-#btnItem {
-  border-color: rgba(81, 231, 255, 0.51);
-  &:hover,
-  &:focus-visible {
-    background-color: rgba(81, 231, 255, 0.15);
-    box-shadow: 0px 0px 20px rgba(81, 231, 255, 0.51);
   }
 }
