@@ -25,7 +25,7 @@ const SeWo = {
   registerWorker() {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register("./../sw.js")
+        .register("./sw.js")
         .then(() => {
           console.info("The service worker was registered successfully.");
         })
