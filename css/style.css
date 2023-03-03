@@ -300,6 +300,10 @@ header .main-nav {
   background-color: var(--head-bg);
   padding: 0.405rem 0 1.55rem;
 }
+header .main-nav .left-nav,
+header .main-nav .right-nav {
+  min-width: 100px;
+}
 header .main-nav .plus--icon {
   font-size: 15px;
   position: relative;

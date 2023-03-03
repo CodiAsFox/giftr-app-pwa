@@ -27,7 +27,7 @@ const swCache = {
         if (fetchResponse.ok) {
           //put in cache
           return caches.open(cacheName).then((cache) => {
-            if (event.request.url.startsWith("http")) {
+            if (ev.request.url.startsWith("http")) {
               cache.put(ev.request, fetchResponse.clone());
               return fetchResponse;
             }
@@ -92,11 +92,3 @@ self.addEventListener("fetch", (ev) => {
     }
   }
 });
-
-class NetworkError extends Error {
-  constructor(msg) {
-    super(msg);
-    this.type = "NetworkError";
-    this.message = msg;
-  }
-}

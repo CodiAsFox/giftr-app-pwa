@@ -2,14 +2,14 @@ import SeWo from "./sewo.js";
 import CACHE from "./cache.js";
 
 const APP = {
-  currentPage: "page-home",
+  currentPage: null,
   activePerson: null,
-  cache: null,
   cacheName: "pwa-cache-thing",
   dataStorage: [],
 
   init() {
-    CACHE.init(APP.cacheName, 1);
+    SeWo.init();
+    APP.loadPeople();
     APP.loadPage("home");
     APP.addListeners();
   },
@@ -19,12 +19,17 @@ const APP = {
         APP.buttonHandler(btn, ev);
       });
     });
+
+    document
+      .querySelector(".logo")
+      .addEventListener("click", () => APP.loadPage("home"));
   },
   buttonHandler(btn, ev) {
     ev.preventDefault();
     const target = btn.getAttribute("target-page");
     const action = btn.getAttribute("target-action");
 
+    info(target, action);
     if (target) APP.getTarget(target, ev);
     if (action) APP.doAction(action, ev);
   },
@@ -33,41 +38,20 @@ const APP = {
       case "back":
         APP.backPage();
         break;
+      case "add-person":
+        APP.loadPage(target);
+        APP.addPeople();
+        break;
+      case "add-gift":
+        APP.loadPage(target);
+        APP.addGift();
+        break;
       case "gift-list":
         const list = ev.target.closest(".person");
         if (!list) return;
-
         APP.activePerson = list.getAttribute("data-personID");
         APP.loadPage(target);
         APP.showGifts();
-        break;
-      default:
-        const page = APP.loadPage(target);
-        switch (target) {
-          case "person":
-            const title = page.querySelector("h2");
-            if (!APP.activePerson) {
-              title.innerHTML = "Add person.";
-              page.querySelector("#personIntake").reset();
-              page.querySelector(
-                "[target-action=save-person]"
-              ).disabled = false;
-            } else {
-              title.innerHTML = `Edit ${person.name}.`;
-              document.getElementById("btnExport").classList.remove("hidden");
-              document
-                .getElementById("btnDeletePerson")
-                .classList.remove("hidden");
-              let person = APP.dataStorage.find(
-                (p) => p.id === APP.activePerson
-              );
-              let d = new Date(person.dob);
-              let timeStr = d.toISOString().split("T")[0];
-              document.getElementById("name").value = person.name;
-              document.getElementById("dob").value = timeStr;
-            }
-            break;
-        }
         break;
     }
   },
@@ -76,37 +60,150 @@ const APP = {
       case "save-person":
         APP.addNewPerson();
         break;
+      case "save-gift":
+        APP.saveGift();
+        break;
+      case "edit-person":
+        const person = ev.target.closest(".person");
+        if (!person) return;
+        APP.activePerson = person.getAttribute("data-personID");
+        APP.loadPage("add-person");
+        APP.editPeople();
+        break;
     }
   },
+  loadPeople() {
+    CACHE.init(APP.cacheName, 1)
+      .then(() => CACHE.getAll())
+      .then((requests) =>
+        Promise.all(requests.map((request) => CACHE.get(request)))
+      )
+      .then((responses) =>
+        Promise.all(responses.map((response) => JSON.parse(response)))
+      )
+      .then((objects) => {
+        objects.forEach((obj) => APP.dataStorage.push(obj));
+        APP.getSavedPeople();
+      })
+      .catch(APP.displayError);
+  },
+  backPage() {
+    const page = APP.currentPage.id;
 
-  backPage() {},
+    warn(page);
+    switch (page) {
+      case "page-add-gift":
+        APP.loadPage("gift-list");
+        break;
+      default:
+        APP.loadPage("home");
+        break;
+    }
+  },
   loadPage(page) {
     const active = document.querySelector("[active]");
+    const navBtns = document.querySelectorAll(".main-nav button");
     if (active) {
       active.removeAttribute("active");
     }
 
+    navBtns.forEach((btn) => (btn.disabled = true));
+
     APP.currentPage = document.getElementById(`page-${page}`);
     APP.currentPage.setAttribute("active", true);
 
+    switch (page) {
+      case "home":
+        navBtns.item(1).disabled = false;
+        APP.getSavedPeople();
+        break;
+      case "add-person":
+        navBtns.item(0).disabled = false;
+        break;
+      case "gift-list":
+        navBtns.item(2).disabled = false;
+        navBtns.item(0).disabled = false;
+        break;
+      case "add-gift":
+        navBtns.item(0).disabled = false;
+        break;
+    }
+
     return APP.currentPage;
   },
+  addPeople() {
+    const page = APP.currentPage;
+    const title = page.querySelector("h2");
+    title.innerHTML = "Add person.";
+    page.querySelector("#personIntake").reset();
+    page.querySelector("[target-action=save-person]").disabled = false;
+  },
+  editPeople() {
+    const page = APP.currentPage;
+    const title = page.querySelector("h2");
+    const person = APP.dataStorage.find((p) => p.id === APP.activePerson);
 
-  showGifts() {
-    const file = `${APP.activePerson}.json`;
-    const data = CACHE.get(file);
-    const person = JSON.parse(data);
-    // Do something with person's gifts
+    if (!APP.activePerson) {
+      APP.addPeople();
+      return false;
+    }
+
+    title.innerHTML = `Edit ${person.name}.`;
+
+    page.querySelector("[target-action=save-person]").disabled = false;
+    page.querySelector("[target-action=remove-person]").disabled = false;
+    page.querySelector("[target-action=save-export]").disabled = false;
+    const birthdate = new Date(person.dob);
+    document.getElementById("name").value = person.name;
+    document.getElementById("dob").value = birthdate
+      .toISOString()
+      .split("T")[0];
   },
   getSavedPeople() {
-    const results = CACHE.getAll();
-    const data = Promise.all(results.map((result) => CACHE.get(result)));
-    const people = data.map((d) => JSON.parse(d));
-    APP.dataStorage = people;
+    const personList = APP.currentPage.querySelector(".content");
+
+    if (APP.dataStorage.length === 0) {
+      personList.innerHTML = `
+      <h2>Currently no people saved</h2>
+      <p>Click the add button in the top bar to add a person.</p>
+    `;
+    } else {
+      personList.innerHTML = `<ul class="person-list"></ul>`;
+      const list = personList.querySelector("ul");
+
+      const peopleListing = APP.dataStorage
+        .map(({ id, name, dob }) => {
+          const date = new Date(dob);
+          const birthdate = date.toLocaleDateString("en-CA", {
+            month: "long",
+            day: "numeric",
+          });
+          return `
+          <li class="person" data-personID="${id}">
+            <p class="name">${name}</p>
+            <p class="dob"><time>${birthdate}</time></p>
+            <p class="button-group">
+              <button class="btnEdit" target-action="edit-person" title="Edit ${name} profile"><i class="material-symbols-rounded">edit</i></button>
+              <button class="btnGifts" target-page="gift-list" title="Remove ${name} profile"><i class="material-symbols-rounded">redeem</i></button>
+            </p>
+          </li>
+        `;
+        })
+        .join("");
+
+      list.innerHTML = peopleListing;
+      list.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", (ev) => {
+          APP.buttonHandler(btn, ev);
+        });
+      });
+      personList.appendChild(list);
+    }
   },
   addNewPerson() {
     const page = APP.currentPage;
-    const formData = page.getElementById("personIntake").elements;
+    const form = page.querySelector("#personIntake");
+    const formData = form.elements;
 
     let person = {};
 
@@ -124,31 +221,116 @@ const APP = {
     person.name = formData["name"].value;
     person.dob = new Date(formData["dob"].value).valueOf();
 
-    const fileName = `${person.id}.json`;
-    const fileType = "application/json";
-    const fileData = JSON.stringify(person);
+    CACHE.save(`${person.id}.json`, JSON.stringify(person), "application/json")
+      .then(() => {
+        if (APP.activePerson === null) {
+          APP.dataStorage.push(person);
+        } else {
+          APP.dataStorage = APP.dataStorage.map((p) => {
+            return p.id === APP.activePerson ? person : p;
+          });
+        }
 
-    CACHE.save(fileName, fileData, fileType);
+        form.reset();
+        APP.loadPage("home");
+      })
+      .catch(APP.displayError);
+  },
+  addGift() {
+    const page = APP.currentPage;
+    const person = APP.dataStorage.find((obj) => obj.id === APP.activePerson);
+    const title = page.querySelector("h2");
+    title.innerHTML = `Add gift for ${person.name}.`;
+    page.querySelector("#giftIntake").reset();
+    page.querySelector("[target-action=save-gift]").disabled = false;
+  },
+  saveGift() {
+    const page = APP.currentPage;
+    const form = page.querySelector("#giftIntake");
+    const formData = form.elements;
+    const person = APP.dataStorage.find((obj) => obj.id === APP.activePerson);
 
-    if (APP.activePerson === null) {
-      APP.dataStorage.push(person);
-    } else {
-      APP.dataStorage = APP.dataStorage.map((p) => {
-        return p.id === APP.activePerson ? person : p;
-      });
+    const gift = {
+      id: crypto.randomUUID(),
+      name: formData["idea"].value,
+      store: formData["store"].value,
+      url: formData["url"].value,
+    };
+
+    person.gifts.push(gift);
+
+    CACHE.save(`${person.id}.json`, JSON.stringify(person), "application/json")
+      .then(() => {
+        APP.dataStorage = APP.dataStorage.map((person) =>
+          person.id === APP.activePerson ? person : person
+        );
+        form.reset();
+        APP.loadPage("gift-list");
+      })
+      .catch(APP.displayError);
+  },
+  editGift() {
+    const page = APP.currentPage;
+    const title = page.querySelector("h2");
+    const person = APP.dataStorage.find((p) => p.id === APP.activePerson);
+
+    if (!APP.activePerson) {
+      APP.addPeople();
+      return false;
     }
 
-    const form = page.querySelector("#personIntake");
-    form.reset();
-    APP.loadPage("home");
-  },
-  deletePerson() {},
+    title.innerHTML = `Edit ${person.name}.`;
 
+    page.querySelector("[target-action=save-person]").disabled = false;
+    page.querySelector("[target-action=remove-person]").disabled = false;
+    page.querySelector("[target-action=save-export]").disabled = false;
+    const birthdate = new Date(person.dob);
+    document.getElementById("name").value = person.name;
+    document.getElementById("dob").value = birthdate
+      .toISOString()
+      .split("T")[0];
+  },
+  showGifts() {
+    const person = APP.dataStorage.find((obj) => obj.id == APP.activePerson);
+    if (!person) {
+      APP.loadPage("home");
+      return;
+    }
+    const giftPage = APP.currentPage;
+
+    if (person.gifts.length === 0) {
+      giftPage.innerHTML =
+        "<h2>No gifts added.</h2><p>Have an idea? Great! click on the top right button to add it.</p>";
+    } else {
+      giftPage.innerHTML = '<ul class="gifts"></ul>';
+      const list = giftPage.querySelector("ul");
+      const giftListing = person.gifts
+        .map(
+          (gift) => `
+      <li class="gift" data-personID="${gift.id}">
+        <p class="name">${gift.name}</p>
+        <p class="store">${gift.store}</p>
+        <p class="url"><a href="">${gift.url}</a></p>
+        <p class="actions">
+          <button class="btnDelete" target-action="remove-gift" title="Delete ${gift.name} idea">
+            <i class="material-symbols-rounded">delete_sweep</i>
+          </button>
+        </p>
+      </li>`
+        )
+        .join("");
+
+      list.innerHTML = giftListing;
+      list.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", (ev) => {
+          APP.buttonHandler(btn, ev);
+        });
+      });
+    }
+  },
   displayError(err) {
-    console.error(err);
+    error(err);
   },
 };
-
-export default APP;
 
 document.addEventListener("DOMContentLoaded", APP.init);

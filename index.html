@@ -13,8 +13,8 @@
     style-src 'self' 'unsafe-inline' *.googleapis.com *.typekit.net;
     font-src *.typekit.net *.gstatic.com" />
 
-    <!-- <script src="./js/utils.js"></script>
-    <script src="./js/app.js" type="module"></script> -->
+    <script src="./js/utils.js"></script>
+    <script src="./js/app.js" type="module"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,12 +41,12 @@
                 </div>
                 <h1 class="logo">Giftr<span class="sub-title">App</span></h1>
                 <div class="right-nav">
-                    <button title="Add Person" target-page="person">
+                    <button title="Add Person" target-page="add-person">
                         <span class="material-symbols-rounded">
                             <span class="plus--icon">add</span>person
                     </button>
                     </span>
-                    <button disabled title="Add Gift" target-page="gift">
+                    <button disabled title="Add Gift" target-page="add-gift">
                         <span class="material-symbols-rounded">
                             <span class="plus--icon">add</span>redeem
                         </span>
@@ -57,7 +57,64 @@
         </div>
     </header>
     <main>
-        I'm rewriting the whole thing again.
+        <!-- Home -->
+        <section id="page-home" class="container">
+            <h2>Welcome to Giftr!</h2>
+            <p>To start select a person from the list bellow, or click on the button on the top right side.</p>
+            <div class="content"></div>
+
+        </section>
+
+        <!-- Add/Edit Person -->
+        <section id="page-add-person" class="container">
+            <h2></h2>
+            <form id="personIntake" action="#">
+                <p>
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </p>
+                <p>
+                    <label for="dob">Birthrate</label>
+                    <input type="date" id="dob" name="dob" required>
+                </p>
+            </form>
+            <div class="btn-holder">
+                <button target-action="save-person" title="Save" disabled><i
+                        class="material-symbols-rounded">save</i></button>
+                <button target-action="remove-person" title="Delete" disabled><i
+                        class="material-symbols-rounded">delete_sweep</i></button>
+                <button target-action="save-export" title="Export" disabled><i
+                        class="material-symbols-rounded">download</i></button>
+            </div>
+        </section>
+
+        <!-- Gift List -->
+        <section id="page-gift-list" class="container"></section>
+
+        <!-- Add Gift -->
+        <section id="page-add-gift" class="container">
+            <h2>Gifts for <span>Name</span></h2>
+            <form id="giftIntake">
+                <p>
+                    <label for="idea">Gift Idea</label>
+                    <input type="text" id="idea" name="idea" maxlength="100" required />
+                </p>
+                <p>
+                    <label for="store">Store | Location</label>
+                    <input type="text" id="store" name="store" required />
+                </p>
+                <p>
+                    <label for="url">URL</label>
+                    <input type="url" id="url" name="url" required />
+                </p>
+                <div class="btn-holder">
+                    <button id="btnSaveIdea" target-action="save-gift" title="Save gift" disabled><i
+                            class="material-symbols-rounded">save</i></button>
+                    <button id="btnDeleteIdea" target-action="delete-gift" title="Delete gift" disabled><i
+                            class="material-symbols-rounded">delete_sweep</i></button>
+                </div>
+            </form>
+        </section>
     </main>
 </body>
 
